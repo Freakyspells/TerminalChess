@@ -6,8 +6,8 @@ class Board
         @board = create_board
     end
 
+    # Prints the board and the positions
     def print_board
-
         letters = *('A'..'H')
         letters.map { |letter| print "      " + letter + "   "}
         puts
@@ -24,18 +24,23 @@ class Board
     end
 
     def move_piece(move1, move2)
-        postion1=convert_move(move1)
+        # Change player move to array position
+        position1=convert_move(move1)
         position2=convert_move(move2)
-        @board[position2[0]][position2[1]] = @board[postion1[0]][postion1[1]]
-        @board[postion1[0]][postion1[1]] = '      '
+        
+        (@board[position1[0]][position1[1]]).move(position2[0],position2[1])
+        # Move piece to new postion, leave old position empty
+        @board[position2[0]][position2[1]] = @board[position1[0]][position1[1]]
+        @board[position1[0]][position1[1]] = '      '
         return(@board)
     end
 
     def create_board
+        # Create empty board and backline class order
         parts = [Castle, Knight, Bishop, Queen, King, Bishop, Knight, Castle]
-        
         @board = []
-        # setup black side of the board
+
+        # Setup black side of the board
         @board << (0..7).map { |item| parts[item].new([@board.length, item], "black")}
         @board << (0..7).map { |row| Pawn.new([@board.length, row], "black")}
         
@@ -44,7 +49,7 @@ class Board
             @board << ['      '] * 8
         end
         
-        #setup white side of the board
+        # Setup white side of the board
         @board << (0..7).map { |row| Pawn.new([@board.length, row], "white")}
         @board << (0..7).map { |item| parts[item].new([@board.length, item], "white")}
 

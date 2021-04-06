@@ -11,8 +11,8 @@ class ChessPiece
     end
 
     def move(row, column)
-        @position=[row, column]
-        @unmoved=false
+        @position = [row, column]
+        @unmoved = false
     end
 
     # def inspect
@@ -29,19 +29,20 @@ class ChessPiece
 end
 
 class Pawn < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
-        @type = "  Pawn #{@postion}"
+        @type = "  Pawn  #{@postion}"
     end
     def move(row, column)
         super(row, column)
-        @type = "queen"
+        puts row
+        if row == 0 && @colour == 'white' || row == 7 && @colour == 'black'
+            @type = " Queen "
+        end
     end
 end
 
 class Castle < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
         @type = ' Castle '
@@ -49,7 +50,6 @@ class Castle < ChessPiece
 end
 
 class Knight < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
         @type = ' knight '
@@ -57,7 +57,6 @@ class Knight < ChessPiece
 end
 
 class Bishop < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
         @type = ' Bishop '
@@ -65,7 +64,6 @@ class Bishop < ChessPiece
 end
 
 class Queen < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
         @type = ' Queen  '
@@ -73,7 +71,6 @@ class Queen < ChessPiece
 end
 
 class King < ChessPiece
-
     def initialize(position, colour)
         super(position, colour)
         @type = '  King  '

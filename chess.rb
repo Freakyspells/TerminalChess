@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 require_relative 'classes/board'
 
+# Clears screen
 def clear
     puts "\e[H\e[2J"
 end
 
+# Start & Welcome message
 def print_start
     puts 'Starting a new game of chess!'
     puts "To move select a piece by it's position."
@@ -13,6 +15,7 @@ def print_start
     puts 'Have fun!'
 end
 
+# quiery's player for a move or they may forfeit
 def get_move(player)
     print "#{player} select a piece to move :"
     position1 = gets.chomp
@@ -26,18 +29,20 @@ def get_move(player)
 
 end
 
+# One turn in the game. Player move then update board.
 def turn(game, player)
     position1, position2 = get_move(player)
     if position1 && position2
         game.move_piece(position1, position2)
-        clear
+        # clear
         game.print_board
         return true
     else
-        return false
+        return false # If a player didn't move they forfeited
     end
 end
 
+# Used to quiery player for a name otherwise player and their number
 def get_player(player_number)
     print "Player#{player_number} enter your name: "
     player = gets.chomp
@@ -52,7 +57,7 @@ end
 game1 = Board.new
 player1 = get_player(1)
 player2 = get_player(2)
-clear
+# clear
 print_start
 game1.print_board
 
@@ -60,6 +65,7 @@ game1.print_board
 forfeit = false
 checkmate = false
 
+# play game until end condition is reached
 while forfeit == false && checkmate == false
     if turn(game1, player1) == false
         winner = player2
@@ -70,4 +76,5 @@ while forfeit == false && checkmate == false
     end
 end
 
+# Announce the winner!
 puts "Congratulations #{winner} you won!!"
