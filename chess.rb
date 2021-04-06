@@ -31,14 +31,19 @@ end
 
 # One turn in the game. Player move then update board.
 def turn(game, player)
-    position1, position2 = get_move(player)
-    if position1 && position2
-        game.move_piece(position1, position2)
-        # clear
-        game.print_board
-        return true
-    else
-        return false # If a player didn't move they forfeited
+    while true
+        position1, position2 = get_move(player)
+        if position1 && position2
+            if game.move_piece(position1, position2)
+                # clear
+                game.print_board
+                return true
+            else
+                puts "Not a valid move. Please try again."
+            end
+        else
+            return false # If a player didn't move they forfeited
+        end
     end
 end
 

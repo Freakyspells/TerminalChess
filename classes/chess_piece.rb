@@ -34,10 +34,15 @@ class Pawn < ChessPiece
         @type = "  Pawn  #{@postion}"
     end
     def move(row, column)
-        super(row, column)
-        puts row
-        if row == 0 && @colour == 'white' || row == 7 && @colour == 'black'
-            @type = " Queen "
+        if @position[1] == column
+            super(row, column)
+            puts row
+            if row == 0 && @colour == 'white' || row == 7 && @colour == 'black'
+                @type = " Queen "
+            end
+            return true
+        else
+            return false
         end
     end
 end

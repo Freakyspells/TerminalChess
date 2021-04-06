@@ -28,11 +28,16 @@ class Board
         position1=convert_move(move1)
         position2=convert_move(move2)
         
-        (@board[position1[0]][position1[1]]).move(position2[0],position2[1])
-        # Move piece to new postion, leave old position empty
-        @board[position2[0]][position2[1]] = @board[position1[0]][position1[1]]
-        @board[position1[0]][position1[1]] = '      '
-        return(@board)
+        # Update position in piece
+        viable_move = @board[position1[0]][position1[1]].move(position2[0], position2[1])
+        if viable_move
+            # Move piece to new postion, leave old position empty
+            @board[position2[0]][position2[1]] = @board[position1[0]][position1[1]]
+            @board[position1[0]][position1[1]] = '      '
+            return true
+        else
+            return false
+        end
     end
 
     def create_board
