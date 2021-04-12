@@ -26,7 +26,6 @@ def get_move(player)
     position2 = gets.chomp
     
     return position2 == 'forfeit' ? false : position1, position2
-
 end
 
 # One turn in the game. Player move then update board.
@@ -60,8 +59,8 @@ end
 
 # starts game & prints welcome message
 game1 = Board.new
-player1 = get_player(1)
-player2 = get_player(2)
+white = get_player(1)
+black = get_player(2)
 # clear
 print_start
 game1.print_board
@@ -72,11 +71,11 @@ checkmate = false
 
 # play game until end condition is reached
 while forfeit == false && checkmate == false
-    if turn(game1, player1) == false
-        winner = player2
+    if turn(game1, white) == false
+        winner = black
         forfeit = true
-    elsif turn(game1, player2) == false
-        winner = player1
+    elsif turn(game1, black) == false
+        winner = white
         forfeit = true
     end
 end
