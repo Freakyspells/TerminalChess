@@ -53,6 +53,17 @@ class Board
         puts
     end
 
+    def validate_moves(move1, move2)
+        validate_move(move1) && validate_move(move2) ? true : false
+    end
+
+    def validate_move(move)
+        if move.length == 2 && move.ascii_only?
+            return ([*'a'..'h'].index move[0].downcase) && ([*1..8].index move[1].to_i) ? true : false
+        end
+        false
+    end
+
     # takes a position eg a2 and converts it to array position
     def convert_move(move)
         return [8 - move[1].to_i, move[0].downcase.ord-97]
@@ -64,43 +75,53 @@ class Board
         p position1 = convert_move(move1)
         p position2 = convert_move(move2)
         # Our move starts here
-        @piece = @board[position1[0]][position1[1]]
+        @@piece = @board[position1[0]][position1[1]]
         # Our move ends here
         @finish = @board[position2[0]][position2[1]]
-
-        # Update position in piece
+        stop = position1.dup
+        p stop
+        puts "^this is starting finish"
+        puts "I should only see this once"
         if valid_move(position1, position2)
-            viable_move = @piece.move(position2[0], position2[1])
-            # Move piece to new postion, leave old position empty
-            @board[position2[0]][position2[1]] = @piece
-            @board[position1[0]][position1[1]] = nil
-            return true
+            # Update position in piece
+            # @@piece.move(position2[0], position2[1])
+            # p @@piece.is_a?(Pawn)
+            # if @@piece.is_a?(Pawn) && (position2[1] == 0 || position2[1] == 7) # If pawn got to the end
+            #     # upgrade it to queen
+            #     @board[position2[0]][position2[1]] = Queen.new(@@piece.position, @@piece.colour)
+            # else
+                # Move piece to new postion
+                @board[position2[0]][position2[1]] = @@piece
+            # end
+            # @@piece = nil
+            # @board[position1[0]][position1[1]] = nil
+            @board[stop[0]][stop[1]] = nil
+            @board[stop[0]][stop[1]]
+            p position1
+            p position2
+            puts "should be removing last postion."
+            p stop
+            true
         else
-            return false
+            false
         end
     end
 
     # Checks if a move is valid
     def valid_move(start, finish)
-        if out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
-            puts "Out of bounds or self"
+        if out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@@piece.colour)
             return false
         end
-        if @piece.can_move(start, finish)
-            
-            if @piece.can_jump
-                puts "jumping"
-                return true
-            elsif clear_steps(start, finish)
-                puts "clear steps"
-                return true
-            end
-        end
-        return false
+        return @@piece.can_move(start, finish) && (@@piece.can_jump || clear_steps(start, finish)) ? true : false
     end
-    
+
     def out_of_bounds(row, column)
-        row >= 0 && row <= 7 && column >= 0 && column <= 7 ? false : true
+        if row >= 0 && row <= 7 && column >= 0 && column <= 7
+            false
+        else
+            puts "That is out of bounds."
+            true
+        end
     end
 
     def attacking_self(colour)
@@ -109,24 +130,30 @@ class Board
         elsif @finish.colour != colour
             return false
         end
-        puts "attacking self"
+        puts "You cannot take your own pieces."
         return true
     end
 
     def clear_steps(start, finish)
         puts "trying steps"
-        while (start[0] - finish[0]).abs >= 1 && (start[1] - finish[1]).abs >= 1
+        p ((start[0] - finish[0]).abs > 1)
+        p ((start[1] - finish[1]).abs > 1)
+        until step_to(finish[0], start[0]) == start[0] && step_to(finish[1], start[1]) == start[1]
             p start
             p finish
             start[0] = step_to(start[0], finish[0])
             start[1] = step_to(start[1], finish[1])
+            puts @board[start[0]][start[1]]
+            puts "check"
             if @board[start[0]][start[1]] != nil
+                puts "This piece cannot jump."
                 return false
             end
         end
+        puts "Cleared steps."
         true
     end
-    
+
     def step_to(start, finish)
         if start < finish
             start += 1
@@ -135,6 +162,4 @@ class Board
         end
         return start
     end
-
-
 end

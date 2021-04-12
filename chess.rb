@@ -33,12 +33,16 @@ def turn(game, player)
     while true
         position1, position2 = get_move(player)
         if position1 && position2
-            if game.move_piece(position1, position2)
-                # clear
-                game.print_board
-                return true
+            if game.validate_moves(position1, position2)
+                if game.move_piece(position1, position2)
+                    # clear
+                    game.print_board
+                    return true
+                else
+                    puts "Not a valid move. Please try again."
+                end
             else
-                puts "Not a valid move. Please try again."
+                puts "Positions must be within bounds A1 to H8."
             end
         else
             return false # If a player didn't move they forfeited
