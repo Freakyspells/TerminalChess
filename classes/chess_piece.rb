@@ -11,7 +11,8 @@ class ChessPiece
         @can_jump = false
     end
 
-    def move
+    def move(position)
+        @position = position
         @unmoved = false
         true
     end
@@ -37,10 +38,10 @@ class Pawn < ChessPiece
         y2 = finish[1]
     
 
-        if @colour == "white" && (x2 == x1 - 1 || x2 == x1 - 2 && @unmoved )
+        if @colour == "white" && (x2 == x1 - 1 || x2 == x1 - 2 && y1 == y2 && @unmoved)
             true
             
-        elsif @colour == "black" && (x1 == x2 - 1 || x1 == x2 - 2 && @unmoved )
+        elsif @colour == "black" && (x1 == x2 - 1 || x1 == x2 - 2 && y1 == y2 && @unmoved)
              
             true
         else
@@ -63,7 +64,6 @@ class Castle < ChessPiece
         x2 = finish[0]
         y1 = start[1]
         y2 = finish[1]
-
 
         # x or y axis only
         x1 == x2 || y1 == y2 ? true : false
@@ -91,13 +91,10 @@ class Bishop < ChessPiece
     end
 
     def can_move(start, finish)
-        puts "checking bishop"
-        p start
-        p finish
-        p x1 = start[0]
-        p x2 = finish[0]
-        p y1 = start[1]
-        p y2 = finish[1]
+        x1 = start[0]
+        x2 = finish[0]
+        y1 = start[1]
+        y2 = finish[1]
 
         # diagonal only: x diff == y diff 
         (x1 - x2).abs == (y1 - y2).abs ? true : false

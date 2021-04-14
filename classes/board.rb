@@ -5,6 +5,8 @@ class Board
     attr_reader :board
     def initialize
         @board = create_board
+        @w_king = [7, 4]
+        @b_king = [0, 4]
     end
 
     # initializes my board array with pieces.
@@ -54,11 +56,11 @@ class Board
         puts
     end
 
-    def validate_moves(move1, move2)
-        validate_move(move1) && validate_move(move2) ? true : false
+    def validate_bounds(move1, move2)
+        validate_bound(move1) && validate_bound(move2) ? true : false
     end
 
-    def validate_move(move)
+    def validate_bound(move)
         if move.length == 2 && move.ascii_only?
             return ([*'a'..'h'].index move[0].downcase) && ([*1..8].index move[1].to_i) ? true : false
         end
@@ -76,49 +78,77 @@ class Board
         p position1 = convert_move(move1)
         p position2 = convert_move(move2)
         # Our move starts here
-        @piece = @board[position1[0]][position1[1]]
-        @finish = @board[position2[0]][position2[1]]
+        p @piece = @board[position1[0]][position1[1]]
+        p @finish = @board[position2[0]][position2[1]]
+        puts "p1,p2,Sp,Fp"
         # This goes to nil after our move is made.
         start_position = position1.dup
-        puts "^this is starting finish"
-        puts "I should only see this once"
+
         if valid_move(position1, position2)
             # Update position in piece
-            puts "is pawn?"
-            p @piece.is_a?(Pawn)
-            p @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7)
-            @piece.move
+            @piece.move(position2)
             if @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7) # If pawn got to the end
-                # upgrade it to queen
-                @board[position2[0]][position2[1]] = Queen.new(@piece.position, @piece.colour)
+                @board[position2[0]][position2[1]] = Queen.new(@piece.position, @piece.colour) # upgrade it to queen
             else
                 # Move piece to new postion
                 @board[position2[0]][position2[1]] = @piece
-                @finish = @piece
             end
+            # Set original position to nil
             @board[start_position[0]][start_position[1]] = nil
+            # check if a player has checked
+            p @piece.position
+            king_checks
+            is_check(@w_king)
             true
         else
             false
         end
     end
+
+    def king_checks
+        if is_check(@w_king) 
+            if @piece.colour == "white"
+                puts "That move puts you in check. Try again."
+                false
+            else
+                puts "White is now in check."
+                true
+            end
+        elsif is_check(@b_king) 
+            if @piece.colour == "black"
+                puts "That move puts you in check. Try again."
+                false
+            else
+                puts "black is now in check."
+                true
+            end
+        end
+    end
+
+    # looks for check
+    def is_check(king)
+        valid_move(@piece.position, king) ? true : false
+    end
+
 
     # Checks if a move is valid
     def valid_move(start, finish)
-        if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
-            return false
-        end
-        return @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
-    end
-
-    def out_of_bounds(row, column)
-        if row >= 0 && row <= 7 && column >= 0 && column <= 7
+        # if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
+        if @piece == nil || attacking_self(@piece.colour)
             false
         else
-            puts "That is out of bounds."
-            true
+            @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
         end
     end
+
+    # def out_of_bounds(row, column)
+    #     if row >= 0 && row <= 7 && column >= 0 && column <= 7
+    #         false
+    #     else
+    #         puts "That is out of bounds."
+    #         true
+    #     end
+    # end
 
     def attacking_self(colour)
         p @finish
@@ -131,22 +161,16 @@ class Board
     end
 
     def clear_steps(start, finish)
-        puts "trying steps"
-        p ((start[0] - finish[0]).abs > 1)
-        p ((start[1] - finish[1]).abs > 1)
         until step_to(finish[0], start[0]) == start[0] && step_to(finish[1], start[1]) == start[1]
-            p start
-            p finish
+
             start[0] = step_to(start[0], finish[0])
             start[1] = step_to(start[1], finish[1])
-            puts @board[start[0]][start[1]]
-            puts "check"
+
             if @board[start[0]][start[1]] != nil
                 puts "This piece cannot jump."
                 return false
             end
         end
-        puts "Cleared steps."
         true
     end
 
