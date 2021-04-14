@@ -2,6 +2,7 @@
 require_relative './chess_piece'
 
 class Board
+    attr_reader :board
     def initialize
         @board = create_board
     end
@@ -75,32 +76,26 @@ class Board
         p position1 = convert_move(move1)
         p position2 = convert_move(move2)
         # Our move starts here
-        @@piece = @board[position1[0]][position1[1]]
-        # Our move ends here
-        @finish = @board[position2[0]][position2[1]]
-        stop = position1.dup
-        p stop
+        @piece = @board[position1[0]][position1[1]]
+        # This goes to nil after our move is made.
+        start_position = position1.dup
         puts "^this is starting finish"
         puts "I should only see this once"
         if valid_move(position1, position2)
             # Update position in piece
-            # @@piece.move(position2[0], position2[1])
-            # p @@piece.is_a?(Pawn)
-            # if @@piece.is_a?(Pawn) && (position2[1] == 0 || position2[1] == 7) # If pawn got to the end
-            #     # upgrade it to queen
-            #     @board[position2[0]][position2[1]] = Queen.new(@@piece.position, @@piece.colour)
-            # else
+            puts "is pawn?"
+            p @piece.is_a?(Pawn)
+            p @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7)
+            @piece.move(position2[0], position2[1])
+            if @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7) # If pawn got to the end
+                # upgrade it to queen
+                @board[position2[0]][position2[1]] = Queen.new(@piece.position, @piece.colour)
+            else
                 # Move piece to new postion
-                @board[position2[0]][position2[1]] = @@piece
-            # end
-            # @@piece = nil
-            # @board[position1[0]][position1[1]] = nil
-            @board[stop[0]][stop[1]] = nil
-            @board[stop[0]][stop[1]]
-            p position1
-            p position2
-            puts "should be removing last postion."
-            p stop
+                @board[position2[0]][position2[1]] = @piece
+                @finish = @piece
+            end
+            @board[start_position[0]][start_position[1]] = nil
             true
         else
             false
@@ -109,10 +104,10 @@ class Board
 
     # Checks if a move is valid
     def valid_move(start, finish)
-        if out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@@piece.colour)
+        if out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
             return false
         end
-        return @@piece.can_move(start, finish) && (@@piece.can_jump || clear_steps(start, finish)) ? true : false
+        return @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
     end
 
     def out_of_bounds(row, column)
@@ -125,13 +120,12 @@ class Board
     end
 
     def attacking_self(colour)
-        if @finish == nil
-            return false
-        elsif @finish.colour != colour
-            return false
+        if @finish == nil && @finish.colour != colour
+            false
+        else
+            puts "You cannot take your own pieces."
+            true
         end
-        puts "You cannot take your own pieces."
-        return true
     end
 
     def clear_steps(start, finish)

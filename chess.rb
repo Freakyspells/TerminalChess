@@ -71,10 +71,10 @@ game1.print_board
 
 # Sets flags for end of game condition.
 forfeit = false
-checkmate = false
+# checkmate = false
 
 # play game until end condition is reached
-while forfeit == false && checkmate == false
+while forfeit == false # && checkmate == false
     if turn(game1, white) == false
         winner = black
         forfeit = true

@@ -40,6 +40,30 @@ class Pawn < ChessPiece
         super(position, colour)
         @type = "  Pawn  "
     end
+    def can_move(start, finish)
+        p x1 = start[0]
+        p x2 = finish[0]
+        p y1 = start[1]
+        p y2 = finish[1]
+    
+        p @colour
+        p (x2 == x1 + 2 && @unmoved == true)
+        p (x2 == x1 + 2)
+        p x2
+        p (x1 + 2)
+        p @unmoved
+        if @colour == "white" && (x2 == x1 - 1 || x2 == x1 - 2 && @unmoved )
+            true
+            
+        elsif @colour == "black" && (x1 == x2 - 1 || x1 == x2 - 2 && @unmoved )
+             
+            true
+        else
+            puts "Pawns move forward."
+            false
+        end
+
+    end
 
 end
 
@@ -54,6 +78,7 @@ class Castle < ChessPiece
         x2 = finish[0]
         y1 = start[1]
         y2 = finish[1]
+
 
         # x or y axis only? OR diagonal x diff == y diff (Makes sure we're only moving in a straight line)
         x1 == x2 || y1 == y2 ? true : false
