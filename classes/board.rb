@@ -77,6 +77,7 @@ class Board
         p position2 = convert_move(move2)
         # Our move starts here
         @piece = @board[position1[0]][position1[1]]
+        @finish = @board[position2[0]][position2[1]]
         # This goes to nil after our move is made.
         start_position = position1.dup
         puts "^this is starting finish"
@@ -86,7 +87,7 @@ class Board
             puts "is pawn?"
             p @piece.is_a?(Pawn)
             p @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7)
-            @piece.move(position2[0], position2[1])
+            @piece.move
             if @piece.is_a?(Pawn) && (position2[0] == 0 || position2[0] == 7) # If pawn got to the end
                 # upgrade it to queen
                 @board[position2[0]][position2[1]] = Queen.new(@piece.position, @piece.colour)
@@ -104,7 +105,7 @@ class Board
 
     # Checks if a move is valid
     def valid_move(start, finish)
-        if out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
+        if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
             return false
         end
         return @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
@@ -120,7 +121,8 @@ class Board
     end
 
     def attacking_self(colour)
-        if @finish == nil && @finish.colour != colour
+        p @finish
+        if @finish == nil || @finish.colour != colour
             false
         else
             puts "You cannot take your own pieces."

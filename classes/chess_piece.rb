@@ -11,19 +11,9 @@ class ChessPiece
         @can_jump = false
     end
 
-    def move(row, column)
+    def move
         @unmoved = false
         true
-    end
-
-    def can_move(start, finish)
-        x1 = start[0]
-        x2 = finish[0]
-        y1 = start[1]
-        y2 = finish[1]
-
-        # x or y axis only? OR diagonal x diff == y diff (Makes sure we're only moving in a straight line)
-        (x1 == x2 || y1 == y2) || (x1 - x2).abs == (y1 - y2).abs ? true : false
     end
 
     def inspect
@@ -41,17 +31,12 @@ class Pawn < ChessPiece
         @type = "  Pawn  "
     end
     def can_move(start, finish)
-        p x1 = start[0]
-        p x2 = finish[0]
-        p y1 = start[1]
-        p y2 = finish[1]
+        x1 = start[0]
+        x2 = finish[0]
+        y1 = start[1]
+        y2 = finish[1]
     
-        p @colour
-        p (x2 == x1 + 2 && @unmoved == true)
-        p (x2 == x1 + 2)
-        p x2
-        p (x1 + 2)
-        p @unmoved
+
         if @colour == "white" && (x2 == x1 - 1 || x2 == x1 - 2 && @unmoved )
             true
             
@@ -80,7 +65,7 @@ class Castle < ChessPiece
         y2 = finish[1]
 
 
-        # x or y axis only? OR diagonal x diff == y diff (Makes sure we're only moving in a straight line)
+        # x or y axis only
         x1 == x2 || y1 == y2 ? true : false
     end
 end
@@ -124,11 +109,30 @@ class Queen < ChessPiece
         super(position, colour)
         @type = ' Queen  '
     end
+
+    def can_move(start, finish)
+        x1 = start[0]
+        x2 = finish[0]
+        y1 = start[1]
+        y2 = finish[1]
+
+        # x or y axis only? OR diagonal x diff == y diff (Makes sure we're only moving in a straight line)
+        (x1 == x2 || y1 == y2) || (x1 - x2).abs == (y1 - y2).abs ? true : false
+    end
 end
 
 class King < ChessPiece
     def initialize(position, colour)
         super(position, colour)
         @type = '  King  '
+    end
+
+    def can_move(start, finish)
+        x1 = start[0]
+        x2 = finish[0]
+        y1 = start[1]
+        y2 = finish[1]
+
+        (x1 - x2).abs <= 1 && (y1 - y2).abs <= 1 ? true : false
     end
 end
