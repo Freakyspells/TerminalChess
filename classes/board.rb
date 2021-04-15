@@ -35,24 +35,27 @@ class Board
     # Prints the board and the positions
     def print_board
         letters = *('A'..'H')
-        letters.map { |letter| print "        " + letter + "   "}
+        letters.map { |letter| print "       " + letter + " "}
         puts
         for row in 0..7
-            print "#{8 - row} "
+            print "#{8 - row} |"
             for column in 0..7
                 if @board[row][column] != nil
-                    print "| #{@board[row][column]} |"
+                    print (row + column) % 2 == 0 ? Rainbow("#{@board[row][column]}").bg(:tan) : Rainbow("#{@board[row][column]}").bg(:olive)
+                    print '|'
+                    # print "| #{@board[row][column]} |"
                 else
-                    print '|          |'
+                    print (row + column) % 2 == 0 ? Rainbow('        ').bg(:tan) : Rainbow('        ').bg(:olive)
+                    print '|'
                 end
-                
             end
             print " #{8 - row}"
             # p @board[row]
             puts 
-            puts ('============')*8
+            # puts ('=========')*8
+            # puts Rainbow('----------').bg(:black)*8
         end
-        letters.map { |letter| print "        " + letter + "   "}
+        letters.map { |letter| print "       " + letter + " "}
         puts
     end
 
@@ -134,13 +137,19 @@ class Board
     # Checks if a move is valid
     def valid_move(start, finish)
         # if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
-        if @piece == nil || attacking_self(@piece.colour)
-            false
+        if @piece == nil
+            puts "You selected an empty square."
+        elsif attacking_self(@piece.colour) 
+            puts "You cannot take your own pieces."
+        elsif @piece.is_a?(Pawn) && start[1] != finish[1] && @finish == nil
+            "Your pawns can only move diagnoally when taking pieces."
         else
-            @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
+            return @piece.can_move(start, finish) && (@piece.can_jump || clear_steps(start, finish)) ? true : false
         end
+        false
     end
 
+    # redundent
     # def out_of_bounds(row, column)
     #     if row >= 0 && row <= 7 && column >= 0 && column <= 7
     #         false
@@ -149,15 +158,8 @@ class Board
     #         true
     #     end
     # end
-
     def attacking_self(colour)
-        p @finish
-        if @finish == nil || @finish.colour != colour
-            false
-        else
-            puts "You cannot take your own pieces."
-            true
-        end
+        @finish == nil || @finish.colour != colour ? false : true
     end
 
     def clear_steps(start, finish)

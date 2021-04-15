@@ -22,7 +22,8 @@ class ChessPiece
     end
 
     def to_s
-        @type
+        type = @colour == 'white' ? Rainbow(@type).ivory : Rainbow(@type).black
+        # @type
     end
 end
 
@@ -32,17 +33,15 @@ class Pawn < ChessPiece
         @type = "  Pawn  "
     end
     def can_move(start, finish)
-        x1 = start[0]
+        x1 = start[0] # x is column
         x2 = finish[0]
-        y1 = start[1]
+        y1 = start[1] # y is row
         y2 = finish[1]
     
 
         if @colour == "white" && (x2 == x1 - 1 || x2 == x1 - 2 && y1 == y2 && @unmoved)
             true
-            
         elsif @colour == "black" && (x1 == x2 - 1 || x1 == x2 - 2 && y1 == y2 && @unmoved)
-             
             true
         else
             puts "Pawns move forward."
@@ -104,7 +103,7 @@ end
 class Queen < ChessPiece
     def initialize(position, colour)
         super(position, colour)
-        @type = ' Queen  '
+        @type = '  Queen '
     end
 
     def can_move(start, finish)
