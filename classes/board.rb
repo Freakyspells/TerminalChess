@@ -7,6 +7,7 @@ class Board
         @board = create_board
         @w_king = [7, 4]
         @b_king = [0, 4]
+        @turn = 1
     end
 
     # initializes my board array with pieces.
@@ -102,6 +103,7 @@ class Board
             p @piece.position
             king_checks
             is_check(@w_king)
+            @turn += 1
             true
         else
             false
@@ -139,6 +141,8 @@ class Board
         # if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
         if @piece == nil
             puts "You selected an empty square."
+        elsif @piece.colour == 'white' && @turn % 2 != 1 || @piece.colour == 'black' && @turn % 2 != 0
+            puts "That isn't your piece to move."
         elsif attacking_self(@piece.colour) 
             puts "You cannot take your own pieces."
         elsif @piece.is_a?(Pawn) && start[1] != finish[1] && @finish == nil
