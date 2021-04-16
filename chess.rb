@@ -36,7 +36,7 @@ def turn(game, player)
         if position1 && position2
             if game.validate_bounds(position1, position2)
                 if game.move_piece(position1, position2)
-                    # clear
+                    clear
                     game.print_board
                     return true
                 else

@@ -23,7 +23,6 @@ class ChessPiece
 
     def to_s
         type = @colour == 'white' ? Rainbow(@type).ivory : Rainbow(@type).black
-        # @type
     end
 end
 

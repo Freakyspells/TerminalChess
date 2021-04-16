@@ -6,7 +6,9 @@ class Board
     def initialize
         @board = create_board
         @w_king = [7, 4]
+        @w_check = false
         @b_king = [0, 4]
+        @b_check = false
         @turn = 1
     end
 
@@ -44,17 +46,12 @@ class Board
                 if @board[row][column] != nil
                     print (row + column) % 2 == 0 ? Rainbow("#{@board[row][column]}").bg(:tan) : Rainbow("#{@board[row][column]}").bg(:olive)
                     print '|'
-                    # print "| #{@board[row][column]} |"
                 else
                     print (row + column) % 2 == 0 ? Rainbow('        ').bg(:tan) : Rainbow('        ').bg(:olive)
                     print '|'
                 end
             end
-            print " #{8 - row}"
-            # p @board[row]
-            puts 
-            # puts ('=========')*8
-            # puts Rainbow('----------').bg(:black)*8
+            puts " #{8 - row}"
         end
         letters.map { |letter| print "       " + letter + " "}
         puts
@@ -79,15 +76,19 @@ class Board
     # moves a piece from 1 square to another
     def move_piece(move1, move2)
         # Change player move to array position
-        p position1 = convert_move(move1)
-        p position2 = convert_move(move2)
+        position1 = convert_move(move1)
+        position2 = convert_move(move2)
         # Our move starts here
-        p @piece = @board[position1[0]][position1[1]]
-        p @finish = @board[position2[0]][position2[1]]
-        puts "p1,p2,Sp,Fp"
+        @piece = @board[position1[0]][position1[1]]
+        @finish = @board[position2[0]][position2[1]]
+
         # This goes to nil after our move is made.
         start_position = position1.dup
 
+        # if check()
+        #     puts 'You are in check, remember to move out of check.'
+        # end
+         
         if valid_move(position1, position2)
             # Update position in piece
             @piece.move(position2)
@@ -101,7 +102,8 @@ class Board
             @board[start_position[0]][start_position[1]] = nil
             # check if a player has checked
             p @piece.position
-            king_checks
+            @check = false # set check flag back to false
+            king_checks()
             is_check(@w_king)
             @turn += 1
             true
@@ -111,12 +113,12 @@ class Board
     end
 
     def king_checks
-        if is_check(@w_king) 
+        if is_check(@w_king)
             if @piece.colour == "white"
                 puts "That move puts you in check. Try again."
                 false
             else
-                puts "White is now in check."
+                @check = true
                 true
             end
         elsif is_check(@b_king) 
@@ -124,7 +126,7 @@ class Board
                 puts "That move puts you in check. Try again."
                 false
             else
-                puts "black is now in check."
+                @check = true
                 true
             end
         end
@@ -138,7 +140,6 @@ class Board
 
     # Checks if a move is valid
     def valid_move(start, finish)
-        # if @piece == nil || out_of_bounds(start[0], start[1]) || out_of_bounds(finish[0], finish[1]) || attacking_self(@piece.colour)
         if @piece == nil
             puts "You selected an empty square."
         elsif @piece.colour == 'white' && @turn % 2 != 1 || @piece.colour == 'black' && @turn % 2 != 0
@@ -153,15 +154,6 @@ class Board
         false
     end
 
-    # redundent
-    # def out_of_bounds(row, column)
-    #     if row >= 0 && row <= 7 && column >= 0 && column <= 7
-    #         false
-    #     else
-    #         puts "That is out of bounds."
-    #         true
-    #     end
-    # end
     def attacking_self(colour)
         @finish == nil || @finish.colour != colour ? false : true
     end
