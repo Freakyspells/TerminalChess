@@ -1,0 +1,77 @@
+commit 42ee45b47462f8acaa5d353ebac58de1e0a65bd8
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Fri Apr 16 13:05:56 2021 +1000
+
+    Added bash script to install bundler and dependencies.
+
+commit 8554222a9b603d3e7f26c2b83195afb09e8c4e93
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Thu Apr 15 20:26:19 2021 +1000
+
+    Fixed it so you can only move your own pieces during your turn.
+
+commit a15782e20e129aef17e68f130371f0a6752298f3
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Thu Apr 15 14:09:47 2021 +1000
+
+    Added rainbow gem, Board is now printed with alternating background, pieces are white & black for players 1 & 2 respectively. Also reduced spacing around the board.
+
+commit 32598089be7e35e29f286e4e1d42d40792cc0436
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Thu Apr 15 08:54:56 2021 +1000
+
+    Removed redundent checking of bounds. Checking for check now and preventing players moving a piece blocking check. fixed a bug where pawn could move horizontally 1 when going forward 2 squares.
+
+commit 75f9226f150be424d0666f8322b6d23939e9cc26
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Thu Apr 15 07:40:01 2021 +1000
+
+    All pieces moving correctly with exception to pawn only diagnal on attack and speical moves. Also checking if user has selected a piece on the board as well as being within boundary.
+
+commit 3921179fae2e5e6dea639d3caf96a065564c6938
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Thu Apr 15 06:56:31 2021 +1000
+
+    Pawns can once again only move forward. tidied up code, attacking_self method in board much smaller.
+
+commit 5eeaf5347c8c1081f911ac11954ed1bb3a6a5bba
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Tue Apr 13 08:26:26 2021 +1000
+
+    Fixed duplicating bug when moving things more than 2 squares.
+
+commit c047e20bf3c0fc2ad803401a3b74c4b7e46c27ad
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Mon Apr 12 13:19:03 2021 +1000
+
+    Moves now validate boundaries and cannot move through other pieces or  in anything but a straight line, except horses which jump in 2&1 in any direction. Also cannot take your own pieces.
+
+commit e5eda30e8311a9a52978083e232725baf3e7a8a1
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Tue Apr 6 18:19:17 2021 +1000
+
+    Started on confirming moves are valid. Now pawns can only move along their own column. Need to update this so that it allows them to take pieces diagonally forward one square. And only up to 2 square forward on the first move and only one afterwards.
+
+commit 1ed94de00f3a290054959feb89eb522ed46e2917
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Tue Apr 6 17:27:04 2021 +1000
+
+    Now updates position in piece class and pawns upgrade to queens once they reach the end.
+
+commit d39e1244291288a129bbca0d2533837bf93e3eed
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Tue Apr 6 03:16:53 2021 +1000
+
+    Added file for chess piece classes. Updated array to now contain class objects which return their type when called. Rather than just storing a string.
+
+commit 371fd0696ca30ba727e8162accc11f4876e1c7c5
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Sun Apr 4 01:28:57 2021 +1000
+
+    Added file chess.rb, and implemented MVP features: sets up board on start, prints board to screen and refreshes after every move, moving a piece to a square with another piece takes it and users can move pieces by selecting its position and its new position, users can also forfeit the game.
+
+commit 29726ef80ffd7a98a0da2fe73e2b62c244f88234
+Author: Chris Beasley <cjbeas8@gmail.com>
+Date:   Sat Apr 3 20:34:01 2021 +1000
+
+    Inital commit. Set up files and folders for Chess.
